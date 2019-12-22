@@ -7,17 +7,21 @@ namespace ConstructionLine.CodingChallenge.Tests
     [TestFixture]
     public class SearchEngineTests : SearchEngineTestsBase
     {
-        [Test]
-        public void Test()
+        [SetUp]
+        public void Setup()
         {
-            var shirts = new List<Shirt>
+            _shirts = new List<Shirt>
             {
                 new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
                 new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
                 new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
             };
+        }
+        [Test]
+        public void Test()
+        {
 
-            var searchEngine = new SearchEngine(shirts);
+            var searchEngine = new SearchEngine(_shirts);
 
             var searchOptions = new SearchOptions
             {
@@ -27,9 +31,25 @@ namespace ConstructionLine.CodingChallenge.Tests
 
             var results = searchEngine.Search(searchOptions);
 
+            Assert.AreEqual(results.Shirts.Count, 1);
             AssertResults(results.Shirts, searchOptions);
-            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
-            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+            AssertSizeCounts(_shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(_shirts, searchOptions, results.ColorCounts);
+        }
+        [Test]
+        public void TestWithNonExistentShirt()
+        {
+            var searchEngine = new SearchEngine(_shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Colors = new List<Color> { Color.Yellow },
+                Sizes = new List<Size> { Size.Small }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+           Assert.AreEqual(results.Shirts.Count,0);
         }
     }
 }
