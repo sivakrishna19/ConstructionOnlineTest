@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ConstructionLine.CodingChallenge
 {
@@ -19,9 +20,43 @@ namespace ConstructionLine.CodingChallenge
         {
             // TODO: search logic goes here.
 
-            return new SearchResults
+            var filteredShirts = _shirts.Where(x => options.Colors.Any(color => color.Id.Equals(x.Color.Id))
+                                                    && options.Sizes.Any(size => size.Id.Equals(x.Size.Id))).ToList();
+            var groupedSizes  = filteredShirts.GroupBy(a => a.Size.Id).Select(x => new SizeCount
             {
+                Size = x.First().Size,
+                Count = x.Count()
+            }).ToList();
+            var groupedColors = filteredShirts.GroupBy(a => a.Color.Id).Select(x => new ColorCount
+            {
+                Color = x.First().Color,
+                Count = x.Count()
+            }).ToList();
+            foreach (var size in Size.All.Where(siz => groupedSizes.All(a => a.Size.Id != siz.Id)))
+            {
+                groupedSizes.Add(new SizeCount
+                {
+                    Size = size,
+                    Count = _shirts.Count(a => a.Size.Id == size.Id && options.Colors.Select(c => c.Id).Contains(a.Color.Id))
+                });
+            }
+            foreach (var color in Color.All.Where(color => groupedColors.All(a => a.Color.Id != color.Id)))
+            {
+                groupedColors.Add(new ColorCount
+                {
+                    Color = color,
+                    Count = _shirts.Count(c => c.Color.Id == color.Id && (!options.Sizes.Any() || options.Sizes.Select(s => s.Id).Contains(c.Size.Id)))
+                });
+            }
+
+            var result = new SearchResults()
+            {
+                Shirts = filteredShirts,
+                SizeCounts = groupedSizes,
+                ColorCounts = groupedColors
+
             };
+            return result;
         }
     }
 }
