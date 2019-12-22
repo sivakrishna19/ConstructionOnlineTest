@@ -4,11 +4,12 @@ using NUnit.Framework;
 
 namespace ConstructionLine.CodingChallenge.Tests
 {
-    private List<Shirt> _shirts;
+    
     
     [TestFixture]
     public class SearchEngineTests : SearchEngineTestsBase
     {
+    private List<Shirt> _shirts;
         [SetUp]
         public void Setup()
         {
