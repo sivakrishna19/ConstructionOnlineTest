@@ -51,5 +51,10 @@ namespace ConstructionLine.CodingChallenge.Tests
 
            Assert.AreEqual(results.Shirts.Count,0);
         }
+        [Test]
+        public void TesEmptyInput()
+        {
+            Assert.Throws<NullReferenceException>(() => new SearchEngine(_shirts).Search(null));
+        }
     }
 }
