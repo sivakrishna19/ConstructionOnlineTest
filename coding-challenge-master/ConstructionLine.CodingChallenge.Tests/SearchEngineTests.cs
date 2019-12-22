@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace ConstructionLine.CodingChallenge.Tests
 {
+    private List<Shirt> _shirts;
+    
     [TestFixture]
     public class SearchEngineTests : SearchEngineTestsBase
     {
